@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBM Watson Text-to-Speech Demo</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "IBM Plex Sans", Arial, sans-serif;
+    background: #0f172a;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #1e293b;
+    padding: 40px;
+    border-radius: 12px;
+    width: 500px;
+    box-shadow: 0 0 30px rgba(0, 119, 255, 0.4);
+}
+
+h1 {
+    text-align: center;
+    color: #0f62fe;
+    margin-bottom: 10px;
+}
+
+p {
+    text-align: center;
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 20px;
+    font-size: 14px;
+    resize: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 6px;
+    background: #0f62fe;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0353e9;
+}
+
+audio {
+    margin-top: 20px;
+    width: 100%;
+}
+.footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>IBM Watson</h1>
+    <p>Text-to-Speech AI Demo</p>
+
+    <textarea id="textInput" placeholder="Enter text to convert into speech..."></textarea>
+
+    <button onclick="convertToSpeech()">Convert to Voice</button>
+
+    <audio id="audioPlayer" controls></audio>
+
+    <div class="footer">
+        Powered by IBM Watson AI Services
+    </div>
+</div>
+
+<script>
+async function convertToSpeech() {
+
+    const text = document.getElementById("textInput").value;
+
+    if (!text) {
+        alert("Please enter some text.");
+        return;
+    }
+
+    const apiKey = "kejN8Yapx2gM7LtyZoyOPUZ9oeifIMPgBh7FE5bTdEVo";
+    const url = "https://api.au-syd.text-to-speech.watson.cloud.ibm.com/instances/43529efb-e1fe-44f5-a67d-772f1a239651";
+
+    const response = await fetch(url + "/v1/synthesize?voice=en-US_MichaelV3Voice", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Basic " + btoa("apikey:" + apiKey)
+        },
+        body: JSON.stringify({
+            text: text
+        })
+    });
+
+    const audioBlob = await response.blob();
+    const audioURL = URL.createObjectURL(audioBlob);
+
+    const player = document.getElementById("audioPlayer");
+    player.src = audioURL;
+}
+</script>
+
+</body>
+</html>
